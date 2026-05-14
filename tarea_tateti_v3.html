@@ -1,0 +1,94 @@
+
+<style>
+  body{
+    background: rgb(0, 0, 0);
+  }
+  .wrap{background:#4a6fa5;border-radius:14px;padding:12px 10px;font-family:var(--font-sans,sans-serif)}
+  .cols{display:flex;gap:8px}
+  .col{background:#6a8fc8;border-radius:10px;padding:10px 9px;flex:1;display:flex;flex-direction:column;gap:7px}
+  .col-hdr{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+  .num{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #3a5a9c;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#1a2a5c;flex-shrink:0}
+  .ctitle{font-weight:700;font-size:13px;color:#d0e8ff}
+  .card{background:rgba(255,255,255,0.2);border-radius:8px;padding:7px 8px;font-size:11.5px;color:#fff;line-height:1.45}
+  .ct{font-weight:700;font-size:10px;color:#c0dcf8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+  .code{background:#1e2a3a;border-radius:6px;padding:6px 8px;font-family:monospace;font-size:10.5px;color:#a8d4f5;line-height:1.55;margin-top:3px}
+  .rule{border-left:2.5px solid #9fc8ff;padding:3px 7px;font-size:11px;color:#e8f0ff;margin:2px 0}
+  .bgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;background:#1e2a3a;border-radius:6px;padding:5px;width:80px;margin:4px auto}
+  .bc{background:#2e3d5a;border-radius:4px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#a8d4f5}
+  .tag{background:rgba(255,255,255,.2);border-radius:5px;padding:2px 6px;font-size:10.5px;color:#fff;display:inline-block;margin:2px 2px 0 0}
+</style>
+<div class="wrap">
+  <div class="cols">
+
+    <div class="col">
+      <div class="col-hdr"><div class="num">1</div><span class="ctitle">Conceptos</span></div>
+
+      <div class="card">
+        <div class="ct">La matriz</div>
+        Tablero de 3×3 que guarda <code>0</code> (vacío), <code>1</code> (jugador 1) o <code>2</code> (jugador 2).
+        <div class="bgrid">
+          <div class="bc">1</div><div class="bc">2</div><div class="bc">0</div>
+          <div class="bc">0</div><div class="bc">1</div><div class="bc">0</div>
+          <div class="bc">2</div><div class="bc">0</div><div class="bc">1</div>
+        </div>
+        <div class="code">static int[,] tablero = new int[3,3];</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Pedir nombres</div>
+        <div class="code">string[] jugadores = new string[2];<br/>jugadores[0] = Console.ReadLine();<br/>jugadores[1] = Console.ReadLine();</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Turno y bucle principal</div>
+        El programa repite mientras no haya ganador ni empate. El turno alterna entre 1 y 2 con el operador ternario:
+        <div class="code">int turno = 1;<br/>while(!hayGanador() && !tableroLleno()) {<br/>    // jugada...<br/>    turno = turno == 1 ? 2 : 1;<br/>}</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Mostrar resultado</div>
+        Al salir del while, verificar si hubo ganador o empate:
+        <div class="code">if(hayGanador())<br/>    Console.WriteLine("Ganó: " + jugadores[turno-1]);<br/>else<br/>    Console.WriteLine("Empate");</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-hdr"><div class="num">2</div><span class="ctitle">Coordenadas</span></div>
+
+      <div class="card">
+        <div class="ct">Ingresar jugada</div>
+        Leer fila y columna. Si la celda vale <code>0</code> se puede jugar, si no, avisar y pedir de nuevo:
+        <div class="code">int fila = int.Parse(Console.ReadLine());<br/>int col  = int.Parse(Console.ReadLine());<br/><br/>if(tablero[fila, col] == 0)<br/>    tablero[fila, col] = turno;<br/>else {<br/>    Console.WriteLine("Posición ocupada");<br/>    Console.ReadKey();<br/>}</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Dibujar el tablero</div>
+        Dos <code>for</code> anidados. Convertir número a letra, separar columnas con <code>|</code> y filas con <code>---</code>:
+        <div class="code">for(int f = 0; f &lt; 3; f++) {<br/>  for(int c = 0; c &lt; 3; c++) {<br/>    string v = " ";<br/>    if(tablero[f,c]==1) v="X";<br/>    if(tablero[f,c]==2) v="O";<br/>    Console.Write(" "+v+" ");<br/>    if(c &lt; 2) Console.Write("|");<br/>  }<br/>  Console.WriteLine();<br/>  if(f &lt; 2) Console.WriteLine("-----------");<br/>}</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-hdr"><div class="num">3</div><span class="ctitle">Juga y gana</span></div>
+
+      <div class="card">
+        <div class="ct">Verificar ganador — filas y columnas</div>
+        Con un <code>for</code> revisás las 3 filas y las 3 columnas a la vez:
+        <div class="code">for(int i = 0; i &lt; 3; i++) {<br/>  // fila i<br/>  if(tablero[i,0]!=0 &&<br/>     tablero[i,0]==tablero[i,1] &&<br/>     tablero[i,1]==tablero[i,2]) return true;<br/>  // columna i<br/>  if(tablero[0,i]!=0 &&<br/>     tablero[0,i]==tablero[1,i] &&<br/>     tablero[1,i]==tablero[2,i]) return true;<br/>}</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Verificar ganador — diagonales</div>
+        Las dos diagonales se chequean fuera del <code>for</code>:
+        <div class="code">// diagonal ↘<br/>if(tablero[0,0]!=0 &&<br/>   tablero[0,0]==tablero[1,1] &&<br/>   tablero[1,1]==tablero[2,2]) return true;<br/>// diagonal ↙<br/>if(tablero[0,2]!=0 &&<br/>   tablero[0,2]==tablero[1,1] &&<br/>   tablero[1,1]==tablero[2,0]) return true;<br/><br/>return false;</div>
+      </div>
+
+      <div class="card">
+        <div class="ct">Tablero lleno — empate</div>
+        Recorrer toda la matriz: si alguna celda es <code>0</code>, no está lleno todavía:
+        <div class="code">for(int f=0; f&lt;3; f++)<br/>  for(int c=0; c&lt;3; c++)<br/>    if(tablero[f,c]==0) return false;<br/>return true;</div>
+      </div>
+    </div>
+
+  </div>
+</div>
